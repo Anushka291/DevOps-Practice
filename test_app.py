@@ -1,6 +1,5 @@
 import unittest
-import os
-from app import app, DATA_FILE
+from app import app, contents
 
 class FlaskTest(unittest.TestCase):
 
@@ -8,21 +7,16 @@ class FlaskTest(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
-        # backup data
-        if os.path.exists(DATA_FILE):
-            with open(DATA_FILE, "r") as f:
-                self.original = f.read()
-        else:
-            self.original = ""
+        # backup original data
+        self.original = contents.copy()
 
-        # clear file
-        with open(DATA_FILE, "w") as f:
-            f.write("")
+        # clear data before each test
+        contents.clear()
 
     def tearDown(self):
-        # restore
-        with open(DATA_FILE, "w") as f:
-            f.write(self.original)
+        # restore original data
+        contents.clear()
+        contents.extend(self.original)
 
     # ✅ HOME
     def test_home(self):
@@ -38,13 +32,11 @@ class FlaskTest(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
 
-        with open(DATA_FILE) as f:
-            self.assertIn("Test|Desc", f.read())
+        self.assertIn(["Test", "Desc"], contents)
 
     # ✅ EDIT
     def test_edit(self):
-        with open(DATA_FILE, "w") as f:
-            f.write("Old|Data\n")
+        contents.append(["Old", "Data"])
 
         res = self.app.post('/edit/0', data={
             "title": "New",
@@ -53,20 +45,17 @@ class FlaskTest(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
 
-        with open(DATA_FILE) as f:
-            self.assertIn("New|Updated", f.read())
+        self.assertIn(["New", "Updated"], contents)
 
     # ✅ DELETE
     def test_delete(self):
-        with open(DATA_FILE, "w") as f:
-            f.write("Delete|Me\n")
+        contents.append(["Delete", "Me"])
 
         res = self.app.post('/delete/0', follow_redirects=True)
 
         self.assertEqual(res.status_code, 200)
 
-        with open(DATA_FILE) as f:
-            self.assertNotIn("Delete|Me", f.read())
+        self.assertNotIn(["Delete", "Me"], contents)
 
 
 if __name__ == "__main__":

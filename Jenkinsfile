@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/Anushka291/DevOps-Practice.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t flask-cms-app .'

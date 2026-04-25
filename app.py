@@ -1,19 +1,19 @@
-from flask import Flask, render_template, request, redirect
 import os
-from pathlib import Path
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__, template_folder="templates")
 
-DATA_FILE = "data/content.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "data", "content.txt")
 
 # ensure directories exist
-Path("data").mkdir(exist_ok=True)
-Path("templates").mkdir(exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
 
 # create file if missing
 if not os.path.exists(DATA_FILE):
     open(DATA_FILE, "w").close()
 
+print("DATA FILE PATH:", DATA_FILE)
 
 def read_contents():
     contents = []

@@ -19,7 +19,7 @@ pipeline {
                 bat '''
                 docker stop flask-container || echo no container
                 docker rm flask-container || echo no container
-                docker run -d -p 3001:3000 --name flask-container flask-cms-app
+                docker run -d -p 5000:5000 --name flask-container flask-cms-app
                 '''
             }
         }

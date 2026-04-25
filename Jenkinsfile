@@ -23,7 +23,7 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                bat 'docker run -d -p 5000:3000 -v %cd%/data:/app/data --name flask-container flask-cms-app'
+                bat 'docker run -d -p 3000:3000 -v %cd%/data:/app/data --name flask-container flask-cms-app'
             }
         }
     }

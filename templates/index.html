@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            padding: 8px 15px;
+            margin-left: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.delete {
+            background-color: #f44336;
+        }
+        button.delete:hover {
+            background-color: #da190b;
+        }
+        .delete-form {
+            display: inline;
+        }
+        .content-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        hr {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Content Management App</h1>
+
+<h2>Add Content</h2>
+
+<form method="POST">
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" required><br>
+
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="description" required><br>
+
+    <button type="submit" id="submitBtn">Add Content</button>
+</form>
+
+<hr>
+
+<h2>Content List</h2>
+
+{% if contents %}
+    {% for content in contents %}
+    <div class="content-item">
+        <b>{{content[0]}}</b> - {{content[1]}}
+        
+        <!-- Edit Button -->
+        <form action="/edit/{{loop.index0}}" method="GET" style="display:inline;">
+            <button type="submit" id="editBtn{{loop.index0}}">Edit</button>
+        </form>
+
+        <!-- Delete Button -->
+        <form action="/delete/{{loop.index0}}" method="POST" class="delete-form">
+            <button type="submit" id="deleteBtn{{loop.index0}}" class="delete">Delete</button>
+        </form>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No content available. Add some content to get started!</p>
+{% endif %}
+
+</body>
+</html>
